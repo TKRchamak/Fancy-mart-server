@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 const bodyParser =require('body-parser')
 const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 
 require('dotenv').config()
 const port = process.env.PORT || 5055
@@ -30,11 +31,21 @@ client.connect(err => {
   })
   
   app.get('/products', (req,res)=> {
-    productCollection.find()
+    productCollection.find({})
     .toArray((error, document) => {
       res.send(document);
     })
   })
+
+  app.get('/checkout/:id', (req,res)=> {
+    const id = ObjectID(req.params.id);
+    productCollection.find({_id: id})
+    .toArray((error, document) => {
+      res.send(document)
+      console.log(document)
+    })
+  })
+
 
   // client.close();
 });
